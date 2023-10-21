@@ -67,8 +67,9 @@ class S3StorageManager(StorageManager):
         """
         try:
             self.__s3.delete_object(Bucket=self.__bucket_name, Key=path)
+            print(f"File {path} deleted successfully from bucket {self.__bucket_name}.")
         except ClientError as ex:
-            if ex.response.get("Error", dict()).get("Code") == 'NoSuchKey':
+            if ex.response.get("Error", dict()).get("Code") == '404':
                 print(f"File {path} not found in bucket {self.__bucket_name}.")
             else:
                 raise ex

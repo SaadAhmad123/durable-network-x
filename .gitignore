@@ -4,3 +4,4 @@ __pycache__
 tests/.graphs
 dist
 .DS_Store
+.env
