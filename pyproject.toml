@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "durable-network-x"
-version = "0.1.0"
+version = "0.1.1"
 description = "This is the durable NetworkX wrapper"
 authors = ["Saad Ahmad <saadkwi12@hotmail.com>"]
 readme = "README.md"
