@@ -92,12 +92,28 @@ class DurableNetworkX:
         self.__storage_manager.write(graphml, self.__instance_storage_path)
         return self
 
-    def new(self, instance_id: str) -> 'DurableNetworkX':
+    def new(
+            self, 
+            instance_id: str, 
+            network_x_graph_to_use: typing.Union[
+                networkx.Graph, 
+                networkx.DiGraph, 
+                networkx.MultiDiGraph, 
+                networkx.MultiGraph,
+                None
+            ] = None
+        ) -> 'DurableNetworkX':
         """
         Create a new graph instance.
 
         :param instance_id: A unique identifier for the graph instance.
+        :param network_x_graph_to_use: An optional networkx graph instance. If not provided,
+                                    a new graph of the type specified during class instantiation 
+                                    will be created. If provided, it must match the graph type 
+                                    specified during class instantiation.
+        :returns: The current DurableNetworkX instance.
         :raises FileExistsError: If an instance with the given ID already exists.
+        :raises TypeError: If the provided or generated graph does not match the expected type.
         """
         self.__instance_id = instance_id
         self.__instance_storage_path = self.__instance_id_to_storage_path(self.__instance_id)
@@ -106,8 +122,10 @@ class DurableNetworkX:
             raise FileExistsError((f"An instance with id={self.__instance_id} already exists."
                                    " Cannot create a new one. Either `use` the existing instance"
                                    " or `delete` it first"))
-        
-        self.__graph = self.__get_graph_constructor()()
+        if network_x_graph_to_use is None:
+            self.__graph = self.__get_graph_constructor()()
+        else:
+            self.__graph = network_x_graph_to_use
         self.__verify_graph_type()
         self.save()
         return self
